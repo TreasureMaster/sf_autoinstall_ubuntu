@@ -39,7 +39,7 @@ php:
 del_php:
 	@systemctl stop php7.0-fpm
 	@systemctl stop php7.3-fpm
-	@apt-get remove --purge php7*
+	@apt-get remove --purge php7* -y
 
 
 # Полезные команды
