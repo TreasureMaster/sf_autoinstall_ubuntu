@@ -12,7 +12,13 @@ del_apache:
 	@apt purge -y apache2
 
 example:
-	@cp -r ./www/* /var/www
+	@cp -r ./www/example.ru /var/www
 	@cp -r ./sites-available/* /etc/apache2/sites-available
 	@ln -s /etc/apache2/sites-available/example.ru.conf /etc/apache2/sites-enabled/example.ru.conf
+	@systemctl reload apache2
+
+del_example:
+	@rm -r /var/www/example.ru
+	@rm /etc/apache2/sites-enabled/example.ru.conf
+	@rm /etc/apache2/sites-available/example.ru.conf
 	@systemctl reload apache2
