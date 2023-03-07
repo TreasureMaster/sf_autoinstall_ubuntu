@@ -7,5 +7,6 @@ apache:
 	@systemctl enable apache2
 
 del_apache:
-	@apt remove apache2
-	@apt purge apache2
+	@systemctl stop apache2
+	@apt remove -y apache2
+	@apt purge -y apache2
