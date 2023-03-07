@@ -36,5 +36,11 @@ php:
 	@a2enmod actions fcgid alias proxy_fcgi
 	@systemctl reload apache2
 
+del_php:
+	@systemctl stop php7.0-fpm
+	@systemctl stop php7.3-fpm
+	@apt-get remove --purge php7*
+
+
 # Полезные команды
 # Проверка конфигурации apache: apache2ctl -t
