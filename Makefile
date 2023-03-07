@@ -16,3 +16,5 @@ example:
 	@cp -r ./sites-available /etc/apache2/sites-available
 	@ln -s /etc/apache2/sites-available/example.ru.conf /etc/apache2/sites-enabled/example.ru.conf
 	@systemctl reload apache2
+
+# Test git pull
