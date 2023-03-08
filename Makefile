@@ -51,6 +51,7 @@ del_php:
 	@systemctl stop php7.3-fpm
 	@apt-get remove --purge php7* -y
 	@apt-get remove --purge php-common -y
+	@apt-get remove --purge libapache2-mod-fcgid -y
 
 php7ru:
 	@cp -r ./www/php0.ru /var/www && cp -r ./www/php3.ru /var/www
