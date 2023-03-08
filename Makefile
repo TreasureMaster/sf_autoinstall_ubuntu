@@ -16,7 +16,7 @@ del_apache:
 example:
 	@cp -r ./www/example.ru /var/www
 	@cp -r ./sites-available/* /etc/apache2/sites-available
-	@ln -s /etc/apache2/sites-available/example.ru.conf /etc/apache2/sites-enabled/example.ru.conf
+	@a2ensite example.ru.conf
 	@systemctl reload apache2
 
 del_example:
@@ -51,11 +51,9 @@ del_php:
 	@apt-get remove --purge php-common -y
 
 php7ru:
-	@cp -r ./www/php0.ru /var/www
-	@cp -r ./www/php3.ru /var/www
+	@cp -r ./www/php0.ru /var/www && cp -r ./www/php3.ru /var/www
 	@cp -r ./sites-available/* /etc/apache2/sites-available
-	@ln -s /etc/apache2/sites-available/php0.ru.conf /etc/apache2/sites-enabled/php0.ru.conf
-	@ln -s /etc/apache2/sites-available/php3.ru.conf /etc/apache2/sites-enabled/php3.ru.conf
+	@a2ensite php0.ru.conf && a2ensite php3.ru.conf
 	@systemctl reload apache2
 
 del_php7ru:
