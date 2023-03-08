@@ -25,6 +25,10 @@ del_example:
 	@rm /etc/apache2/sites-available/example.ru.conf
 	@systemctl reload apache2
 
+# @sed -i '/^listen =/s/^/;/g' $(PHP70_CONF)
+# @sed -i '/^;listen =/ a listen = 127.0.0.1:9001' $(PHP70_CONF)
+# @sed -i '/^listen =/s/^/;/g' $(PHP73_CONF)
+# @sed -i '/^;listen =/ a listen = 127.0.0.1:9003' $(PHP73_CONF)
 php:
 	@apt-get install software-properties-common -y
 	@add-apt-repository -y ppa:ondrej/php
@@ -39,8 +43,6 @@ php:
 	@sed -i '/^;security.limit_extensions/s/;//g' $(PHP73_CONF)
 	@sed -i '/^security.limit_extensions/s/$$/ .html .wsgi/g' $(PHP73_CONF)
 	@sed -i '/^;listen.allowed_clients/s/;//g' $(PHP73_CONF)
-	@sed -i '/^listen =/s/^/;/g' $(PHP73_CONF)
-	@sed -i '/^;listen =/ a listen = 127.0.0.1:9003' $(PHP73_CONF)
 	@systemctl start php7.0-fpm
 	@systemctl enable php7.0-fpm
 	@systemctl start php7.3-fpm
@@ -60,6 +62,15 @@ php7ru:
 	@cp -r ./sites-available/* /etc/apache2/sites-available
 	@ln -s /etc/apache2/sites-available/php0.ru.conf /etc/apache2/sites-enabled/php0.ru.conf
 	@ln -s /etc/apache2/sites-available/php3.ru.conf /etc/apache2/sites-enabled/php3.ru.conf
+	@systemctl reload apache2
+
+del_php7ru:
+	@rm /etc/apache2/sites-enabled/php0.ru.conf
+	@rm /etc/apache2/sites-available/php0.ru.conf
+	@rm /etc/apache2/sites-enabled/php3.ru.conf
+	@rm /etc/apache2/sites-available/php3.ru.conf
+	@rm -r /var/www/php0.ru
+	@rm -r /var/www/php3.ru
 	@systemctl reload apache2
 
 
