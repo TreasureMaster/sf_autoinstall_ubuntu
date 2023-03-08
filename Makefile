@@ -28,7 +28,7 @@ del_example:
 php:
 	@apt-get install software-properties-common -y
 	@add-apt-repository ppa:ondrej/php
-	@apt-get update -y
+	@apt-get --assume-yes update
 	@apt-get install php7.0 php7.0-fpm php7.0-mysql libapache2-mod-php7.0 libapache2-mod-fcgid -y
 	@apt-get install php7.3 php7.3-fpm php7.3-mysql libapache2-mod-php7.3 -y
 	@sed -i '/^;security.limit_extensions/s/;//g' $(PHP70_CONF)
