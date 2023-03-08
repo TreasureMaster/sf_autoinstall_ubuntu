@@ -6,7 +6,7 @@ APACHEPORTS_CONF = /etc/apache2/ports.conf
 apache:
 	@apt update
 	@apt install -y apache2
-	@sed -i '/^Listen 80/ a 80' $(APACHEPORTS_CONF)
+	@sed -i '/^Listen 80/s/$$/80/g' $(APACHEPORTS_CONF)
 	@systemctl start apache2
 	@systemctl enable apache2
 
