@@ -14,6 +14,7 @@ del_apache:
 	@systemctl stop apache2
 	@apt remove -y apache2
 	@apt purge -y apache2
+	@rm -rf /etc/apache2
 
 example:
 	@cp -r ./www/example.ru /var/www
@@ -23,8 +24,8 @@ example:
 
 del_example:
 	@a2dissite example.ru.conf
-	@rm /etc/apache2/sites-available/example.ru.conf
-	@rm -r /var/www/example.ru
+	@rm -f /etc/apache2/sites-available/example.ru.conf
+	@rm -rf /var/www/example.ru
 	@systemctl reload apache2
 
 php:
@@ -60,9 +61,10 @@ php7ru:
 
 del_php7ru:
 	@a2dissite php0.ru.conf && a2dissite php3.ru.conf
-	@rm /etc/apache2/sites-available/php3.ru.conf
-	@rm -r /var/www/php0.ru
-	@rm -r /var/www/php3.ru
+	@rm -f /etc/apache2/sites-available/php0.ru.conf
+	@rm -f /etc/apache2/sites-available/php3.ru.conf
+	@rm -rf /var/www/php0.ru
+	@rm -rf /var/www/php3.ru
 	@systemctl reload apache2
 
 
