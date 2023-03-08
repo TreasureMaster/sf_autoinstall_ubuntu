@@ -1,7 +1,7 @@
 # -------------------------------- Пути к PHP -------------------------------- #
 PHP70_CONF = /etc/php/7.0/fpm/pool.d/www.conf
 PHP73_CONF = /etc/php/7.3/fpm/pool.d/www.conf
-APACHEPORTS_CONF = /etc/php/7.3/fpm/pool.d/www.conf
+APACHEPORTS_CONF = /etc/apache2/ports.conf
 
 apache:
 	@apt update
