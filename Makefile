@@ -12,7 +12,7 @@ apache:
 
 del_apache:
 	@systemctl stop apache2
-	@apt remove --purge -y apache2*
+	@apt-get remove --purge -y apache2*
 	@rm -rf /etc/apache2
 
 example:
