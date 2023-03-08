@@ -25,10 +25,6 @@ del_example:
 	@rm /etc/apache2/sites-available/example.ru.conf
 	@systemctl reload apache2
 
-# @sed -i '/^listen =/s/^/;/g' $(PHP70_CONF)
-# @sed -i '/^;listen =/ a listen = 127.0.0.1:9001' $(PHP70_CONF)
-# @sed -i '/^listen =/s/^/;/g' $(PHP73_CONF)
-# @sed -i '/^;listen =/ a listen = 127.0.0.1:9003' $(PHP73_CONF)
 php:
 	@apt-get install software-properties-common -y
 	@add-apt-repository -y ppa:ondrej/php
@@ -38,8 +34,6 @@ php:
 	@sed -i '/^;security.limit_extensions/s/;//g' $(PHP70_CONF)
 	@sed -i '/^security.limit_extensions/s/$$/ .html .wsgi/g' $(PHP70_CONF)
 	@sed -i '/^;listen.allowed_clients/s/;//g' $(PHP70_CONF)
-	@sed -i '/^listen =/s/^/;/g' $(PHP70_CONF)
-	@sed -i '/^;listen =/ a listen = 127.0.0.1:9001' $(PHP70_CONF)
 	@sed -i '/^;security.limit_extensions/s/;//g' $(PHP73_CONF)
 	@sed -i '/^security.limit_extensions/s/$$/ .html .wsgi/g' $(PHP73_CONF)
 	@sed -i '/^;listen.allowed_clients/s/;//g' $(PHP73_CONF)
