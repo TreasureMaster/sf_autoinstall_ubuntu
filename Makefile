@@ -20,9 +20,9 @@ example:
 	@systemctl reload apache2
 
 del_example:
-	@rm -r /var/www/example.ru
-	@rm /etc/apache2/sites-enabled/example.ru.conf
+	@a2dissite example.ru.conf
 	@rm /etc/apache2/sites-available/example.ru.conf
+	@rm -r /var/www/example.ru
 	@systemctl reload apache2
 
 php:
@@ -57,9 +57,7 @@ php7ru:
 	@systemctl reload apache2
 
 del_php7ru:
-	@rm /etc/apache2/sites-enabled/php0.ru.conf
-	@rm /etc/apache2/sites-available/php0.ru.conf
-	@rm /etc/apache2/sites-enabled/php3.ru.conf
+	@a2dissite php0.ru.conf && a2dissite php3.ru.conf
 	@rm /etc/apache2/sites-available/php3.ru.conf
 	@rm -r /var/www/php0.ru
 	@rm -r /var/www/php3.ru
