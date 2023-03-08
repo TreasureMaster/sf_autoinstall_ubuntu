@@ -1,10 +1,12 @@
 # -------------------------------- Пути к PHP -------------------------------- #
 PHP70_CONF = /etc/php/7.0/fpm/pool.d/www.conf
 PHP73_CONF = /etc/php/7.3/fpm/pool.d/www.conf
+APACHEPORTS_CONF = /etc/php/7.3/fpm/pool.d/www.conf
 
 apache:
 	@apt update
 	@apt install -y apache2
+	@sed -i '/^Listen 80/ a 80' $(APACHEPORTS_CONF)
 	@systemctl start apache2
 	@systemctl enable apache2
 
