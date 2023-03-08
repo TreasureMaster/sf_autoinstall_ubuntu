@@ -1,4 +1,6 @@
-
+# -------------------------------- Пути к PHP -------------------------------- #
+PHP70_CONF = /etc/php/7.0/fpm/pool.d/www.conf
+PHP73_CONF = /etc/php/7.3/fpm/pool.d/www.conf
 
 apache:
 	@apt update
@@ -29,6 +31,16 @@ php:
 	@apt-get update -y
 	@apt-get install php7.0 php7.0-fpm php7.0-mysql libapache2-mod-php7.0 libapache2-mod-fcgid -y
 	@apt-get install php7.3 php7.3-fpm php7.3-mysql libapache2-mod-php7.3 -y
+	@sed -i '/^;security.limit_extensions/s/;//g' $(PHP70_CONF)
+	@sed -i '/^security.limit_extensions/s/$/ .html .wsgi/g' $(PHP70_CONF)
+	@sed -i '/^;listen.allowed_clients/s/;//g' $(PHP70_CONF)
+	@sed -i '/^listen =/s/^/;/g' $(PHP70_CONF)
+	@sed -i '/^;listen =/ a listen = 127.0.0.1:9001' $(PHP70_CONF)
+	@sed -i '/^;security.limit_extensions/s/;//g' $(PHP73_CONF)
+	@sed -i '/^security.limit_extensions/s/$/ .html .wsgi/g' $(PHP73_CONF)
+	@sed -i '/^;listen.allowed_clients/s/;//g' $(PHP73_CONF)
+	@sed -i '/^listen =/s/^/;/g' $(PHP73_CONF)
+	@sed -i '/^;listen =/ a listen = 127.0.0.1:9003' $(PHP73_CONF)
 	@systemctl start php7.0-fpm
 	@systemctl enable php7.0-fpm
 	@systemctl start php7.3-fpm
