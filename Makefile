@@ -1,8 +1,12 @@
 # -------------------------------- Пути к PHP -------------------------------- #
-PHP70_CONF = /etc/php/7.0/fpm/pool.d/www.conf
-PHP73_CONF = /etc/php/7.3/fpm/pool.d/www.conf
+PHPv1 = 7.0
+PHPv2 = 7.3
+PHP1_CONF = /etc/php/$(PHPv1)/fpm/pool.d/www.conf
+PHP2_CONF = /etc/php/$(PHPv2)/fpm/pool.d/www.conf
 APACHEPORTS_CONF = /etc/apache2/ports.conf
 
+# ------------------------------ Точки установки ----------------------------- #
+# Установка Apache
 apache:
 	@apt update
 	@apt install -y apache2
@@ -10,56 +14,64 @@ apache:
 	@systemctl start apache2
 	@systemctl enable apache2
 
-del_apache:
-	@systemctl stop apache2
-	@apt-get remove --purge -y apache2*
-	@apt-get remove --purge -y libapache2-mod-*
-	@rm -rf /etc/apache2
-
+# Установка пробного сайта
 example:
 	@cp -r ./www/example.ru /var/www
 	@cp -r ./sites-available/* /etc/apache2/sites-available
 	@a2ensite example.ru.conf
 	@systemctl reload apache2
 
-del_example:
-	@a2dissite example.ru.conf
-	@rm -f /etc/apache2/sites-available/example.ru.conf
-	@rm -rf /var/www/example.ru
-	@systemctl reload apache2
-
+# Установка PHP разных версий
 php:
 	@apt-get install software-properties-common -y
 	@add-apt-repository -y ppa:ondrej/php
 	@apt-get update -y
-	@apt-get install php7.0 php7.0-fpm php7.0-mysql libapache2-mod-php7.0 libapache2-mod-fcgid -y
-	@apt-get install php7.3 php7.3-fpm php7.3-mysql libapache2-mod-php7.3 -y
-	@sed -i '/^;security.limit_extensions/s/;//g' $(PHP70_CONF)
-	@sed -i '/^security.limit_extensions/s/$$/ .html .wsgi/g' $(PHP70_CONF)
-	@sed -i '/^;listen.allowed_clients/s/;//g' $(PHP70_CONF)
-	@sed -i '/^;security.limit_extensions/s/;//g' $(PHP73_CONF)
-	@sed -i '/^security.limit_extensions/s/$$/ .html .wsgi/g' $(PHP73_CONF)
-	@sed -i '/^;listen.allowed_clients/s/;//g' $(PHP73_CONF)
-	@systemctl start php7.0-fpm
-	@systemctl enable php7.0-fpm
-	@systemctl start php7.3-fpm
-	@systemctl enable php7.3-fpm
+	@apt-get install php$(PHPv1) php$(PHPv1)-fpm php$(PHPv1)-mysql libapache2-mod-php$(PHPv1) libapache2-mod-fcgid -y
+	@apt-get install php$(PHPv2) php$(PHPv2)-fpm php$(PHPv2)-mysql libapache2-mod-php$(PHPv2) -y
+	@sed -i '/^;security.limit_extensions/s/;//g' $(PHP1_CONF)
+	@sed -i '/^security.limit_extensions/s/$$/ .html .wsgi/g' $(PHP1_CONF)
+	@sed -i '/^;listen.allowed_clients/s/;//g' $(PHP1_CONF)
+	@sed -i '/^;security.limit_extensions/s/;//g' $(PHP2_CONF)
+	@sed -i '/^security.limit_extensions/s/$$/ .html .wsgi/g' $(PHP2_CONF)
+	@sed -i '/^;listen.allowed_clients/s/;//g' $(PHP2_CONF)
+	@systemctl start php$(PHPv1)-fpm
+	@systemctl enable php$(PHPv1)-fpm
+	@systemctl start php$(PHPv2)-fpm
+	@systemctl enable php$(PHPv2)-fpm
 	@a2enmod actions fcgid alias proxy_fcgi
 	@systemctl reload apache2
 
-del_php:
-	@systemctl stop php7.0-fpm
-	@systemctl stop php7.3-fpm
-	@apt-get remove --purge php7* -y
-	@apt-get remove --purge php-common -y
-	@apt-get remove --purge libapache2-mod-fcgid -y
-
+# Установка тестовых сайтов на PHP
 php7ru:
 	@cp -r ./www/php0.ru /var/www && cp -r ./www/php3.ru /var/www
 	@cp -r ./sites-available/* /etc/apache2/sites-available
 	@a2ensite php0.ru.conf && a2ensite php3.ru.conf
 	@systemctl reload apache2
 
+# ------------------------------ Точки удаления ------------------------------ #
+# Удаление Apache
+del_apache:
+	@systemctl stop apache2
+	@apt-get remove --purge -y apache2*
+	@apt-get remove --purge -y libapache2-mod-*
+	@rm -rf /etc/apache2
+
+# Удаление пробного сайта
+del_example:
+	@a2dissite example.ru.conf
+	@rm -f /etc/apache2/sites-available/example.ru.conf
+	@rm -rf /var/www/example.ru
+	@systemctl reload apache2
+
+# Удаление PHP
+del_php:
+	@systemctl stop php$(PHPv1)-fpm
+	@systemctl stop php$(PHPv2)-fpm
+	@apt-get remove --purge php7* -y
+	@apt-get remove --purge php-common -y
+	@apt-get remove --purge libapache2-mod-fcgid -y
+
+# Удаление тестовых сайтов на PHP
 del_php7ru:
 	@a2dissite php0.ru.conf && a2dissite php3.ru.conf
 	@rm -f /etc/apache2/sites-available/php0.ru.conf
@@ -71,3 +83,4 @@ del_php7ru:
 
 # Полезные команды
 # Проверка конфигурации apache: apache2ctl -t
+# Установленные модули: apache2ctl -M
