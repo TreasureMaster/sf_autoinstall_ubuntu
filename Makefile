@@ -105,6 +105,11 @@ del_mysql:
 	@rm -rf /var/log/mysql
 	@deluser --remove-home --quiet mysql
 
+del_wordpress:
+	@a2dismod rewrite
+	@apt-get remove --purge -y php7*-curl php7*-gd php7*-mbstring php7*-xml php7*-xmlrpc php7*-soap php7*-intl php7*-zip wordpress
+	@systemctl reload apache2
+
 
 # Полезные команды
 # Проверка конфигурации apache: apache2ctl -t
