@@ -61,6 +61,9 @@ wordpress:
 	@apt install -y wordpress php$(PHPv1)-curl php$(PHPv1)-gd php$(PHPv1)-mbstring php$(PHPv1)-xml php$(PHPv1)-xmlrpc php$(PHPv1)-soap php$(PHPv1)-intl php$(PHPv1)-zip
 	@apt install -y php$(PHPv2)-curl php$(PHPv2)-gd php$(PHPv2)-mbstring php$(PHPv2)-xml php$(PHPv2)-xmlrpc php$(PHPv2)-soap php$(PHPv2)-intl php$(PHPv2)-zip
 	@a2enmod rewrite
+	@cp -r ./sites-available/wordpress_init.conf /etc/apache2/sites-available
+	@a2ensite wordpress_init.conf
+	@systemctl reload apache2
 
 # ------------------------------ Точки удаления ------------------------------ #
 # Удаление Apache
