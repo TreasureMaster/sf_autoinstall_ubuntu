@@ -53,7 +53,7 @@ mysql:
 	@apt update -y
 	@apt-get install -y mysql-server
 	@apt-get install -y mysql-client
-#@mysql -uroot -hlocalhost < wp_init.sql
+	@mysql -uroot -hlocalhost < wp_init.sql
 
 
 # ------------------------------ Точки удаления ------------------------------ #
