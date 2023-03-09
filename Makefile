@@ -91,6 +91,11 @@ del_php7ru:
 del_mysql:
 	@systemctl stop mysql
 	@apt-get remove --purge -y mysql-*
+	@rm -rf /var/lib/mysql/
+	@rm -rf /etc/mysql/
+	@rm -rf /var/log/mysql
+	@deluser --remove-home mysql
+	@delgroup mysql
 
 
 # Полезные команды
