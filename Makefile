@@ -49,12 +49,18 @@ php7ru:
 	@systemctl reload apache2
 
 # Установка mysql
-mysql:
+mysql: wp_init.sql
 	@apt update -y
 	@apt-get install -y mysql-server
 	@apt-get install -y mysql-client
-	@mysql -uroot -hlocalhost < wp_init.sql
+	@mysql -uroot -hlocalhost < $<
 
+# Установка wordpress
+wordpress:
+	@apt update -y
+	@apt install -y wordpress php$(PHPv1)-curl php$(PHPv1)-gd php$(PHPv1)-mbstring php$(PHPv1)-xml php$(PHPv1)-xmlrpc php$(PHPv1)-soap php$(PHPv1)-intl php$(PHPv1)-zip
+	@apt install -y php$(PHPv2)-curl php$(PHPv2)-gd php$(PHPv2)-mbstring php$(PHPv2)-xml php$(PHPv2)-xmlrpc php$(PHPv2)-soap php$(PHPv2)-intl php$(PHPv2)-zip
+	@a2enmod rewrite
 
 # ------------------------------ Точки удаления ------------------------------ #
 # Удаление Apache
