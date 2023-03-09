@@ -94,7 +94,7 @@ del_mysql:
 	@rm -rf /var/lib/mysql*
 	@rm -rf /etc/mysql/
 	@rm -rf /var/log/mysql
-	@deluser --remove-home --quiet --group mysql
+	@deluser --remove-home --quiet mysql
 
 
 # Полезные команды
