@@ -48,6 +48,13 @@ php7ru:
 	@a2ensite php0.ru.conf && a2ensite php3.ru.conf
 	@systemctl reload apache2
 
+# Установка mysql
+mysql:
+	@apt update -y
+	@apt-get install -y mysql-server
+	@apt-get install -y mysql-client
+
+
 # ------------------------------ Точки удаления ------------------------------ #
 # Удаление Apache
 del_apache:
