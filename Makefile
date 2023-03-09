@@ -53,6 +53,7 @@ mysql:
 	@apt update -y
 	@apt-get install -y mysql-server
 	@apt-get install -y mysql-client
+#@mysql -uroot -hlocalhost < wp_init.sql
 
 
 # ------------------------------ Точки удаления ------------------------------ #
@@ -86,6 +87,10 @@ del_php7ru:
 	@rm -rf /var/www/php0.ru
 	@rm -rf /var/www/php3.ru
 	@systemctl reload apache2
+
+del_mysql:
+	@systemctl stop mysql
+	@apt-get remove --purge -y mysql-*
 
 
 # Полезные команды
