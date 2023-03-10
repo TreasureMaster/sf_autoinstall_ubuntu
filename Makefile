@@ -4,6 +4,10 @@ PHPv2 = 7.3
 PHP1_CONF = /etc/php/$(PHPv1)/fpm/pool.d/www.conf
 PHP2_CONF = /etc/php/$(PHPv2)/fpm/pool.d/www.conf
 APACHEPORTS_CONF = /etc/apache2/ports.conf
+WP_LOCALHOST_CONFIG = /etc/wordpress/config-localhost.php
+WP_DB_NAME = wordpress
+WP_DB_USER = wordpressuser
+WP_DB_PASSWORD = pswd1234
 
 # ------------------------------ Точки установки ----------------------------- #
 # Установка Apache
@@ -64,6 +68,10 @@ wordpress:
 	@cp -r ./sites-available/wordpress_init.conf /etc/apache2/sites-available
 	@a2ensite wordpress_init.conf
 	@systemctl reload apache2
+	@cp /usr/share/doc/wordpress/examples/config-default.php $(WP_LOCALHOST_CONFIG)
+	@sed -i 's/database_name_here/$(WP_DB_NAME)/g' $(WP_LOCALHOST_CONFIG)
+	@sed -i 's/username_here/$(WP_DB_USER)/g' $(WP_LOCALHOST_CONFIG)
+	@sed -i 's/password_here/$(WP_DB_PASSWORD)/g' $(WP_LOCALHOST_CONFIG)
 
 # ------------------------------ Точки удаления ------------------------------ #
 # Удаление Apache
@@ -109,6 +117,7 @@ del_wordpress:
 	@a2dismod rewrite
 	@apt-get remove --purge -y php7*-curl php7*-gd php7*-mbstring php7*-xml php7*-xmlrpc php7*-soap php7*-intl php7*-zip wordpress
 	@rm -rf /usr/share/wordpress
+	@rm -rf /etc/wordpress
 	@systemctl reload apache2
 
 
