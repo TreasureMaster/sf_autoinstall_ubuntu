@@ -58,7 +58,7 @@ mysql: wp_init.sql
 	@apt update -y
 	@apt-get install -y mysql-server
 	@apt-get install -y mysql-client
-	@echo -e "\n\n[mysqld]\ndefault_authentication_plugin=mysql_native_password" >> /etc/mysql/mysql.cnf
+	@echo "\n\n[mysqld]\ndefault_authentication_plugin=mysql_native_password" >> /etc/mysql/mysql.cnf
 	@systemctl reload mysql
 	@mysql -uroot -hlocalhost < $<
 
