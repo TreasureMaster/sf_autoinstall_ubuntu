@@ -74,7 +74,7 @@ wordpress:
 	@sed -i 's/database_name_here/$(WP_DB_NAME)/g' $(WP_LOCALHOST_CONFIG)
 	@sed -i 's/username_here/$(WP_DB_USER)/g' $(WP_LOCALHOST_CONFIG)
 	@sed -i 's/password_here/$(WP_DB_PASSWORD)/g' $(WP_LOCALHOST_CONFIG)
-	@sed -i '/DB_COLLATE/s/\'\'/\'utf8_unicode_ci\'/g' $(WP_LOCALHOST_CONFIG)
+	@sed -i "/DB_COLLATE/s/''/'utf8_unicode_ci'/g" $(WP_LOCALHOST_CONFIG)
 	@systemctl reload apache2
 
 # ------------------------------ Точки удаления ------------------------------ #
