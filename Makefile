@@ -4,7 +4,8 @@ PHPv2 = 7.3
 PHP1_CONF = /etc/php/$(PHPv1)/fpm/pool.d/www.conf
 PHP2_CONF = /etc/php/$(PHPv2)/fpm/pool.d/www.conf
 APACHEPORTS_CONF = /etc/apache2/ports.conf
-WP_LOCALHOST_CONFIG = /etc/wordpress/config-default.php
+# WP_LOCALHOST_CONFIG = /etc/wordpress/config-default.php
+WP_LOCALHOST_CONFIG = /usr/share/wordpress/wp-config.php
 WP_DB_NAME = wordpress
 WP_DB_USER = wordpress
 WP_DB_PASSWORD = pswd1234
@@ -60,6 +61,7 @@ mysql: wp_init.sql
 	@mysql -uroot -hlocalhost < $<
 
 # Установка wordpress
+# @cp /usr/share/doc/wordpress/examples/config-default.php $(WP_LOCALHOST_CONFIG)
 wordpress:
 	@apt update -y
 	@apt install -y wordpress php$(PHPv1)-curl php$(PHPv1)-gd php$(PHPv1)-mbstring php$(PHPv1)-xml php$(PHPv1)-xmlrpc php$(PHPv1)-soap php$(PHPv1)-intl php$(PHPv1)-zip
@@ -68,7 +70,7 @@ wordpress:
 	@cp -r ./sites-available/wordpress_init.conf /etc/apache2/sites-available
 	@a2ensite wordpress_init.conf
 	@systemctl reload apache2
-	@cp /usr/share/doc/wordpress/examples/config-default.php $(WP_LOCALHOST_CONFIG)
+	@cp /usr/share/wordpress/wp-config-sample.php $(WP_LOCALHOST_CONFIG)
 	@sed -i 's/database_name_here/$(WP_DB_NAME)/g' $(WP_LOCALHOST_CONFIG)
 	@sed -i 's/username_here/$(WP_DB_USER)/g' $(WP_LOCALHOST_CONFIG)
 	@sed -i 's/password_here/$(WP_DB_PASSWORD)/g' $(WP_LOCALHOST_CONFIG)
