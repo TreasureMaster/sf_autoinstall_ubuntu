@@ -62,19 +62,20 @@ mysql: wp_init.sql
 
 # Установка wordpress
 # @cp /usr/share/doc/wordpress/examples/config-default.php $(WP_LOCALHOST_CONFIG)
+# @cp -r ./sites-available/wptest.ru.conf /etc/apache2/sites-available
 wordpress:
 	@apt update -y
 	@apt install -y wordpress php$(PHPv1)-curl php$(PHPv1)-gd php$(PHPv1)-mbstring php$(PHPv1)-xml php$(PHPv1)-xmlrpc php$(PHPv1)-soap php$(PHPv1)-intl php$(PHPv1)-zip
 	@apt install -y php$(PHPv2)-curl php$(PHPv2)-gd php$(PHPv2)-mbstring php$(PHPv2)-xml php$(PHPv2)-xmlrpc php$(PHPv2)-soap php$(PHPv2)-intl php$(PHPv2)-zip
 	@a2enmod rewrite
 	@cp -r ./sites-available/wordpress_init.conf /etc/apache2/sites-available
-	@cp -r ./sites-available/wptest.ru.conf /etc/apache2/sites-available
-	@a2ensite wptest.ru.conf
-	@systemctl reload apache2
+	@a2ensite wordpress_init.conf
 	@cp /usr/share/wordpress/wp-config-sample.php $(WP_LOCALHOST_CONFIG)
 	@sed -i 's/database_name_here/$(WP_DB_NAME)/g' $(WP_LOCALHOST_CONFIG)
 	@sed -i 's/username_here/$(WP_DB_USER)/g' $(WP_LOCALHOST_CONFIG)
 	@sed -i 's/password_here/$(WP_DB_PASSWORD)/g' $(WP_LOCALHOST_CONFIG)
+	@sed -i '/DB_COLLATE/s/\'\'/\'utf8_unicode_ci\'/g' $(WP_LOCALHOST_CONFIG)
+	@systemctl reload apache2
 
 # ------------------------------ Точки удаления ------------------------------ #
 # Удаление Apache
