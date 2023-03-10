@@ -6,7 +6,7 @@ PHP2_CONF = /etc/php/$(PHPv2)/fpm/pool.d/www.conf
 APACHEPORTS_CONF = /etc/apache2/ports.conf
 WP_LOCALHOST_CONFIG = /etc/wordpress/config-default.php
 WP_DB_NAME = wordpress
-WP_DB_USER = wordpressuser
+WP_DB_USER = wordpress
 WP_DB_PASSWORD = pswd1234
 
 # ------------------------------ Точки установки ----------------------------- #
