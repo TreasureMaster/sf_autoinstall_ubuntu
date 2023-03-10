@@ -59,7 +59,7 @@ mysql: wp_init.sql
 	@apt-get install -y mysql-server
 	@apt-get install -y mysql-client
 	@echo "\n\n[mysqld]\ndefault_authentication_plugin=mysql_native_password" >> /etc/mysql/mysql.cnf
-	@systemctl reload mysql
+	@systemctl restart mysql
 	@mysql -uroot -hlocalhost < $<
 
 # Установка wordpress
