@@ -58,7 +58,7 @@ mysql: wp_init.sql
 	@apt update -y
 	@apt-get install -y mysql-server
 	@apt-get install -y mysql-client
-	@echo "\n\n[mysqld]\ndefault_authentication_plugin=mysql_native_password" >> /etc/mysql/mysql.cnf
+	@echo "\n[mysqld]\ndefault_authentication_plugin=mysql_native_password" >> /etc/mysql/mysql.cnf
 	@systemctl restart mysql
 	@mysql -uroot -hlocalhost < $<
 
@@ -111,6 +111,7 @@ del_php7ru:
 	@rm -rf /var/www/php3.ru
 	@systemctl reload apache2
 
+# Удаление mysql
 del_mysql:
 	@systemctl stop mysql
 	@apt-get remove --purge -y mysql-*
@@ -119,7 +120,10 @@ del_mysql:
 	@rm -rf /var/log/mysql
 	@deluser --remove-home --quiet mysql
 
+# Удаление wordpress
 del_wordpress:
+	@a2dissite wordpress_init.conf
+	@rm -f /etc/apache2/sites-available/wordpress_init.conf
 	@a2dismod rewrite
 	@apt-get remove --purge -y php7*-curl php7*-gd php7*-mbstring php7*-xml php7*-xmlrpc php7*-soap php7*-intl php7*-zip wordpress
 	@rm -rf /usr/share/wordpress
