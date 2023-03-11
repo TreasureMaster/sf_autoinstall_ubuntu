@@ -79,6 +79,13 @@ wordpress:
 	@sed -i "/DB_COLLATE/s/''/'utf8_unicode_ci'/g" $(WP_LOCALHOST_CONFIG)
 	@systemctl reload apache2
 
+# Установка bind9
+bind9:
+	@apt update -y
+	@apt install -y bind9
+	@systemctl start bind9
+	@systemctl enable bind9
+
 # ------------------------------ Точки удаления ------------------------------ #
 # Удаление Apache
 del_apache:
@@ -130,6 +137,11 @@ del_wordpress:
 	@rm -rf /usr/share/docs/wordpress*
 	@rm -rf /etc/wordpress
 	@systemctl reload apache2
+
+# Удаление bind9
+del_bind9:
+	@systemctl stop bind9
+	@apt-get remove --purge -y bind9
 
 
 # Полезные команды
