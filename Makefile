@@ -20,6 +20,7 @@ DIRECT_ZONE = yandex2.db
 REVERSE_ZONE = reverse.db
 # Настройки DNS
 NAMED_SEARCH_MASK = dnssec-validation
+# FIXME forwarders не работает: нужно разблокировать
 NAMED_FORWARDERS_MASK = 0.0.0.0;
 DNS_GOOGLE_1 = 8.8.8.8;
 DNS_GOOGLE_2 = 8.8.4.4;
@@ -109,10 +110,12 @@ yandex2:
 	@sed 's/here_prefix_arpa_address/$(PREFIX_ARPA_ADDRESS)/g' $(MYZONES_PATH)/$(REVERSE_ZONE) > /etc/$(MYZONES_PATH)/$(REVERSE_ZONE)
 	@sed -i 's/here_your_arpa_address/$(YOUR_ARPA_ADDRESS)/g' /etc/$(MYZONES_PATH)/$(REVERSE_ZONE)
 	@cat zones/yandex2.zone >> /etc/bind/named.conf.local
+	@sed -i '#// forwarders#s#//##g' /etc/bind/named.conf.options
 	@sed -i '/$(NAMED_SEARCH_MASK)/ a $(ALLOW_QUERY)' /etc/bind/named.conf.options
 	@sed -i '/$(NAMED_SEARCH_MASK)/ a $(LISTEN_ON)' /etc/bind/named.conf.options
 	@sed -i '/$(NAMED_FORWARDERS_MASK)/ a $(DNS_GOOGLE_2)' /etc/bind/named.conf.options
 	@sed -i '/$(NAMED_FORWARDERS_MASK)/ a $(DNS_GOOGLE_1)' /etc/bind/named.conf.options
+	@sed -i '/$(DNS_GOOGLE_2)/ a };' /etc/bind/named.conf.options
 	@rndc reload
 
 # ------------------------------ Точки удаления ------------------------------ #
