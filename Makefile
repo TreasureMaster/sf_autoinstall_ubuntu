@@ -18,6 +18,10 @@ YOUR_ARPA_ADDRESS = 130.$(PREFIX_ARPA_ADDRESS)
 MYZONES_PATH = bind/myzones/yandex2
 DIRECT_ZONE = yandex2.db
 REVERSE_ZONE = reverse.db
+# Настройки DNS
+NAMED_SEARCH_MASK = dnssec-validation
+LISTEN_ON = listen-on port 53 { 192.168.0.0/24; 192.168.154.0/24; };
+ALLOW_QUERY = allow-query { 192.168.0.0/24; 192.168.154.0/24; };
 
 # ------------------------------ Точки установки ----------------------------- #
 # Установка Apache
@@ -102,6 +106,8 @@ yandex2:
 	@sed 's/here_prefix_arpa_address/$(PREFIX_ARPA_ADDRESS)/g' $(MYZONES_PATH)/$(REVERSE_ZONE) > /etc/$(MYZONES_PATH)/$(REVERSE_ZONE)
 	@sed -i 's/here_your_arpa_address/$(YOUR_ARPA_ADDRESS)/g' /etc/$(MYZONES_PATH)/$(REVERSE_ZONE)
 	@cat zones/yandex2.zone >> /etc/bind/named.conf.local
+	@sed -i '/$(NAMED_SEARCH_MASK)/ a $(ALLOW_QUERY)' /etc/bind/named.conf.options
+	@sed -i '/$(NAMED_SEARCH_MASK)/ a $(LISTEN_ON)' /etc/bind/named.conf.options
 	@rndc reload
 
 # ------------------------------ Точки удаления ------------------------------ #
