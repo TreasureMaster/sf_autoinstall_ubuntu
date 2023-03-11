@@ -84,7 +84,7 @@ bind9:
 	@apt update -y
 	@apt install -y bind9
 	@systemctl start bind9
-	@systemctl enable bind9
+	@systemctl enable named
 
 # ------------------------------ Точки удаления ------------------------------ #
 # Удаление Apache
