@@ -98,7 +98,7 @@ bind9:
 # Установка зоны yandex2
 yandex2:
 	@mkdir -p /etc/$(MYZONES_PATH)
-	@sed 's/here_bind_ip_address/$(YOUR_IP_ADDRESS)/g' $(MYZONES_PATH)/$(DIRECT_ZONE) > /etc/$(MYZONES_PATH)/$(DIRECT_ZONE)
+	@sed 's/here_your_ip_address/$(YOUR_IP_ADDRESS)/g' $(MYZONES_PATH)/$(DIRECT_ZONE) > /etc/$(MYZONES_PATH)/$(DIRECT_ZONE)
 	@sed 's/here_prefix_arpa_address/$(PREFIX_ARPA_ADDRESS)/g' $(MYZONES_PATH)/$(REVERSE_ZONE) > /etc/$(MYZONES_PATH)/$(REVERSE_ZONE)
 	@sed -i 's/here_your_arpa_address/$(YOUR_ARPA_ADDRESS)/g' /etc/$(MYZONES_PATH)/$(REVERSE_ZONE)
 	@cat zones/yandex2.zone >> /etc/bind/named.conf.local
@@ -160,6 +160,7 @@ del_wordpress:
 del_bind9:
 	@systemctl stop bind9
 	@apt-get remove --purge -y bind9
+	@rm -rf /etc/bind
 
 
 # Полезные команды
