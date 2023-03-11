@@ -9,6 +9,15 @@ WP_LOCALHOST_CONFIG = /usr/share/wordpress/wp-config.php
 WP_DB_NAME = wordpress
 WP_DB_USER = wordpress
 WP_DB_PASSWORD = pswd1234
+# Прямой адрес, куда ставится bind
+YOUR_IP_ADDRESS = 192.168.154.130
+# Обратный адрес и его префикс, куда ставится bind
+PREFIX_ARPA_ADDRESS = 154.168.192
+YOUR_ARPA_ADDRESS = 130.$(PREFIX_ARPA_ADDRESS)
+# Пути к зонам
+MYZONES_PATH = bind/myzones/yandex2
+DIRECT_ZONE = yandex2.db
+REVERSE_ZONE = reverse.db
 
 # ------------------------------ Точки установки ----------------------------- #
 # Установка Apache
@@ -85,6 +94,15 @@ bind9:
 	@apt install -y bind9
 	@systemctl start bind9
 	@systemctl enable named
+
+# Установка зоны yandex2
+yandex2:
+	@mkdir -p /etc/$(MYZONES_PATH)
+	@sed 's/here_bind_ip_address/$(YOUR_IP_ADDRESS)/g' $(MYZONES_PATH)/$(DIRECT_ZONE) > /etc/$(MYZONES_PATH)/$(DIRECT_ZONE)
+	@sed 's/here_prefix_arpa_address/$(PREFIX_ARPA_ADDRESS)/g' $(MYZONES_PATH)/$(REVERSE_ZONE) > /etc/$(MYZONES_PATH)/$(REVERSE_ZONE)
+	@sed -i 's/here_your_arpa_address/$(YOUR_ARPA_ADDRESS)/g' /etc/$(MYZONES_PATH)/$(REVERSE_ZONE)
+	@cat zones/yandex2.zone >> /etc/bind/named.conf.local
+	@rndc reload
 
 # ------------------------------ Точки удаления ------------------------------ #
 # Удаление Apache

@@ -1,0 +1,19 @@
+$TTL 30m
+@ IN SOA ns1.yandex2.ru. ns2.yandex2.ru. (
+    3; serial
+    5h; renew period
+    5m; retry
+    1w; expire
+    30m
+); denial cache;
+
+@               IN NS       ns1.yandex2.ru.
+@               IN NS       ns2.yandex2.ru.
+
+yandex2.ru.     IN MX       20 mail.yandex2.ru.
+ns1             IN A        here_your_ip_address
+ns2             IN A        here_your_ip_address
+www             IN CNAME    yandex2.ru.
+mail            IN A        here_your_ip_address
+@               IN A        here_your_ip_address
+mysearch        IN A        9.9.9.9

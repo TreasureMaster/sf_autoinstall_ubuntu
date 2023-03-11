@@ -1,0 +1,9 @@
+
+zone "yandex2.ru" {
+    type master;
+    file "/etc/bind/myzones/yandex2/yandex2.db";
+};
+zone "154.168.192.in-addr.arpa" {
+    type master;
+    file "/etc/bind/myzones/yandex2/reverse.db";
+};

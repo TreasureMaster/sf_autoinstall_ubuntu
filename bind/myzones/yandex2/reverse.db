@@ -1,0 +1,13 @@
+$TTL 604800
+here_prefix_arpa_address.in-addr.arpa. IN SOA ns1.yandex2.ru. admin.yandex2.ru. (
+    2; serial
+    3h; renew period
+    1h ; retry
+    1w; expire
+    1h 
+); denial cache;
+
+here_prefix_arpa_address.in-addr.arpa.      IN NS   ns1.yandex2.ru.
+here_prefix_arpa_address.in-addr.arpa.      IN NS   ns2.yandex2.ru.
+here_your_arpa_address.in-addr.arpa.        IN PTR  yandex2.ru.
+here_your_arpa_address.in-addr.arpa.        IN PTR  mail.yandex2.ru.
