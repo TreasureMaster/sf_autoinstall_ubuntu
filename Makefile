@@ -20,6 +20,9 @@ DIRECT_ZONE = yandex2.db
 REVERSE_ZONE = reverse.db
 # Настройки DNS
 NAMED_SEARCH_MASK = dnssec-validation
+NAMED_FORWARDERS_MASK = 0.0.0.0;
+DNS_GOOGLE_1 = 8.8.8.8;
+DNS_GOOGLE_2 = 8.8.4.4;
 LISTEN_ON = listen-on port 53 { 192.168.0.0/24; 192.168.154.0/24; };
 ALLOW_QUERY = allow-query { 192.168.0.0/24; 192.168.154.0/24; };
 
@@ -108,6 +111,8 @@ yandex2:
 	@cat zones/yandex2.zone >> /etc/bind/named.conf.local
 	@sed -i '/$(NAMED_SEARCH_MASK)/ a $(ALLOW_QUERY)' /etc/bind/named.conf.options
 	@sed -i '/$(NAMED_SEARCH_MASK)/ a $(LISTEN_ON)' /etc/bind/named.conf.options
+	@sed -i '/$(NAMED_FORWARDERS_MASK)/ a $(DNS_GOOGLE_2)' /etc/bind/named.conf.options
+	@sed -i '/$(NAMED_FORWARDERS_MASK)/ a $(DNS_GOOGLE_1)' /etc/bind/named.conf.options
 	@rndc reload
 
 # ------------------------------ Точки удаления ------------------------------ #
