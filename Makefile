@@ -110,7 +110,7 @@ yandex2:
 	@sed 's/here_prefix_arpa_address/$(PREFIX_ARPA_ADDRESS)/g' $(MYZONES_PATH)/$(REVERSE_ZONE) > /etc/$(MYZONES_PATH)/$(REVERSE_ZONE)
 	@sed -i 's/here_your_arpa_address/$(YOUR_ARPA_ADDRESS)/g' /etc/$(MYZONES_PATH)/$(REVERSE_ZONE)
 	@cat zones/yandex2.zone >> /etc/bind/named.conf.local
-	@sed -i '#// forwarders#s#//##g' /etc/bind/named.conf.options
+	@sed -i '/\/\/ forwarders/s/\/\///g' /etc/bind/named.conf.options
 	@sed -i '/$(NAMED_SEARCH_MASK)/ a $(ALLOW_QUERY)' /etc/bind/named.conf.options
 	@sed -i '/$(NAMED_SEARCH_MASK)/ a $(LISTEN_ON)' /etc/bind/named.conf.options
 	@sed -i '/$(NAMED_FORWARDERS_MASK)/ a $(DNS_GOOGLE_2)' /etc/bind/named.conf.options
