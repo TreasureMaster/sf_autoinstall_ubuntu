@@ -100,7 +100,7 @@ wordpress:
 	@sed -i 's/username_here/$(WP_DB_USER)/g' $(WP_LOCALHOST_CONFIG)
 	@sed -i 's/password_here/$(WP_DB_PASSWORD)/g' $(WP_LOCALHOST_CONFIG)
 	@sed -i "/DB_COLLATE/s/''/'utf8_unicode_ci'/g" $(WP_LOCALHOST_CONFIG)
-	@sed -i "$ a \\ndefine( 'FS_METHOD', 'direct' );\n" $(WP_LOCALHOST_CONFIG)
+	@sed -i "$a\\ndefine( 'FS_METHOD', 'direct' );\n" $(WP_LOCALHOST_CONFIG)
 	@chown www-data:www-data -R /usr/share/wordpress
 	@a2ensite wp2.nip.io.conf
 	@systemctl reload apache2
