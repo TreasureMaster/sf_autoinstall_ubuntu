@@ -36,7 +36,7 @@ ALLOW_QUERY = allow-query { 192.168.0.0/24; 192.168.154.0/24; };
 # ------------------------------ Точки установки ----------------------------- #
 # Установка Apache
 apache:
-	@apt update
+	@apt update -y
 	@apt install -y apache2
 	@sed -i '/^Listen 80/s/$$/80/g' $(APACHEPORTS_CONF)
 	@systemctl start apache2
@@ -102,6 +102,7 @@ wordpress:
 	@sed -i "/DB_COLLATE/s/''/'utf8_unicode_ci'/g" $(WP_LOCALHOST_CONFIG)
 	@sed -i "$ a \\ndefine( 'FS_METHOD', 'direct' );\n" $(WP_LOCALHOST_CONFIG)
 	@chown www-data:www-data -R /usr/share/wordpress
+	@a2ensite wp2.nip.io.conf
 	@systemctl reload apache2
 
 # Установка nginx
