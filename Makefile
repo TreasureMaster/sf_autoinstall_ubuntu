@@ -1,14 +1,20 @@
+# ----------------------------- Настройки Apache ----------------------------- #
+APACHEPORTS_CONF = /etc/apache2/ports.conf
+APACHE_SITES = apache2/sites-available
+# ------------------------------ Настройка nginx ----------------------------- #
+NGINX_SITES = nginx/sites-available
 # -------------------------------- Пути к PHP -------------------------------- #
 PHPv1 = 7.0
 PHPv2 = 7.3
 PHP1_CONF = /etc/php/$(PHPv1)/fpm/pool.d/www.conf
 PHP2_CONF = /etc/php/$(PHPv2)/fpm/pool.d/www.conf
-APACHEPORTS_CONF = /etc/apache2/ports.conf
+# ---------------------------- Настройки Wordpress --------------------------- #
 # WP_LOCALHOST_CONFIG = /etc/wordpress/config-default.php
 WP_LOCALHOST_CONFIG = /usr/share/wordpress/wp-config.php
 WP_DB_NAME = wordpress
 WP_DB_USER = wordpress
 WP_DB_PASSWORD = pswd1234
+# ------------------------------ Настройки Bind ------------------------------ #
 # Прямой адрес, куда ставится bind
 YOUR_IP_ADDRESS = 192.168.154.130
 # Обратный адрес и его префикс, куда ставится bind
@@ -39,7 +45,7 @@ apache:
 # Установка пробного сайта
 example:
 	@cp -r ./www/example.ru /var/www
-	@cp -r ./sites-available/* /etc/apache2/sites-available
+	@cp -r ./$(APACHE_SITES)/* /etc/$(APACHE_SITES)
 	@a2ensite example.ru.conf
 	@systemctl reload apache2
 
@@ -66,7 +72,7 @@ php:
 # Установка тестовых сайтов на PHP
 php7ru:
 	@cp -r ./www/php0.ru /var/www && cp -r ./www/php3.ru /var/www
-	@cp -r ./sites-available/* /etc/apache2/sites-available
+	@cp -r ./$(APACHE_SITES)/* /etc/$(APACHE_SITES)
 	@a2ensite php0.ru.conf && a2ensite php3.ru.conf
 	@systemctl reload apache2
 
@@ -87,14 +93,32 @@ wordpress:
 	@apt install -y wordpress php$(PHPv1)-curl php$(PHPv1)-gd php$(PHPv1)-mbstring php$(PHPv1)-xml php$(PHPv1)-xmlrpc php$(PHPv1)-soap php$(PHPv1)-intl php$(PHPv1)-zip
 	@apt install -y php$(PHPv2)-curl php$(PHPv2)-gd php$(PHPv2)-mbstring php$(PHPv2)-xml php$(PHPv2)-xmlrpc php$(PHPv2)-soap php$(PHPv2)-intl php$(PHPv2)-zip
 	@a2enmod rewrite
-	@cp -r ./sites-available/wordpress_init.conf /etc/apache2/sites-available
+	@cp -r ./$(APACHE_SITES)/wordpress_init.conf /etc/$(APACHE_SITES)
 	@a2ensite wordpress_init.conf
 	@cp /usr/share/wordpress/wp-config-sample.php $(WP_LOCALHOST_CONFIG)
 	@sed -i 's/database_name_here/$(WP_DB_NAME)/g' $(WP_LOCALHOST_CONFIG)
 	@sed -i 's/username_here/$(WP_DB_USER)/g' $(WP_LOCALHOST_CONFIG)
 	@sed -i 's/password_here/$(WP_DB_PASSWORD)/g' $(WP_LOCALHOST_CONFIG)
 	@sed -i "/DB_COLLATE/s/''/'utf8_unicode_ci'/g" $(WP_LOCALHOST_CONFIG)
+	@sed -i "$ a \\ndefine( 'FS_METHOD', 'direct' );\n" $(WP_LOCALHOST_CONFIG)
+	@chown www-data:www-data -R /usr/share/wordpress
 	@systemctl reload apache2
+
+# Установка nginx
+nginx:
+	@apt update -y
+	@apt install -y nginx
+
+# Установка nip.io в nginx
+nipio:
+	@cp -r ./$(NGINX_SITES)/wp2.nip.io.conf /etc/$(NGINX_SITES)
+	@ln -s /etc/$(NGINX_SITES)/wp2.nip.io.conf /etc/sites-enabled/wp2.nip.io.conf
+	@systemctl reload nginx
+
+# Установка letsencrypt
+letsencrypt:
+	@apt update -y
+	@apt install -y letsencrypt python3-certbot-nginx python3-certbot-apache
 
 # Установка bind9
 bind9:
@@ -118,6 +142,8 @@ yandex2:
 	@sed -i '/$(DNS_GOOGLE_2)/ a };' /etc/bind/named.conf.options
 	@rndc reload
 
+# Уставовка postfix
+
 # ------------------------------ Точки удаления ------------------------------ #
 # Удаление Apache
 del_apache:
@@ -129,7 +155,7 @@ del_apache:
 # Удаление пробного сайта
 del_example:
 	@a2dissite example.ru.conf
-	@rm -f /etc/apache2/sites-available/example.ru.conf
+	@rm -f /etc/$(APACHE_SITES)/example.ru.conf
 	@rm -rf /var/www/example.ru
 	@systemctl reload apache2
 
@@ -144,8 +170,8 @@ del_php:
 # Удаление тестовых сайтов на PHP
 del_php7ru:
 	@a2dissite php0.ru.conf && a2dissite php3.ru.conf
-	@rm -f /etc/apache2/sites-available/php0.ru.conf
-	@rm -f /etc/apache2/sites-available/php3.ru.conf
+	@rm -f /etc/$(APACHE_SITES)/php0.ru.conf
+	@rm -f /etc/$(APACHE_SITES)/php3.ru.conf
 	@rm -rf /var/www/php0.ru
 	@rm -rf /var/www/php3.ru
 	@systemctl reload apache2
@@ -162,7 +188,7 @@ del_mysql:
 # Удаление wordpress
 del_wordpress:
 	@a2dissite wordpress_init.conf
-	@rm -f /etc/apache2/sites-available/wordpress_init.conf
+	@rm -f /etc/$(APACHE_SITES)/wordpress_init.conf
 	@a2dismod rewrite
 	@apt-get remove --purge -y php7*-curl php7*-gd php7*-mbstring php7*-xml php7*-xmlrpc php7*-soap php7*-intl php7*-zip wordpress
 	@rm -rf /usr/share/wordpress
@@ -176,7 +202,23 @@ del_bind9:
 	@apt-get remove --purge -y bind9
 	@rm -rf /etc/bind
 
+# Удаление nginx
+del_nginx:
+	@systemctl stop nginx
+	@apt-get remove --purge -y nginx*
+	@apt-get remove --purge -y libnginx*
+	@rm -rf /etc/nginx
+
+# Удаление letsencrypt
+# FIXME только удаление пакетов; исправления apache/nginx нет
+del_letsencrypt:
+	@systemctl stop certbot.timer
+	@apt-get remove --purge -y python3-certbot*
+	@apt-get remove --purge -y certbot*
+	@rm -rf /etc/letsencrypt
+
 
 # Полезные команды
 # Проверка конфигурации apache: apache2ctl -t
 # Установленные модули: apache2ctl -M
+# Список установленных пакетов: apt list --installed
