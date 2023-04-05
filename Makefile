@@ -205,19 +205,20 @@ del_bind9:
 	@rm -rf /etc/bind
 
 # Удаление nginx
-del_nginx:
-	@systemctl stop nginx
-	@apt-get remove --purge -y nginx*
-	@apt-get remove --purge -y libnginx*
-	@rm -rf /etc/nginx
+# FIXME вроде удаляется, но следы остаются и мешают установке
+# del_nginx:
+# 	@systemctl stop nginx
+# 	@apt-get remove --purge -y nginx*
+# 	@apt-get remove --purge -y libnginx*
+# 	@rm -rf /etc/nginx
 
 # Удаление letsencrypt
 # FIXME только удаление пакетов; исправления apache/nginx нет
-del_letsencrypt:
-	@systemctl stop certbot.timer
-	@apt-get remove --purge -y python3-certbot*
-	@apt-get remove --purge -y certbot*
-	@rm -rf /etc/letsencrypt
+# del_letsencrypt:
+# 	@systemctl stop certbot.timer
+# 	@apt-get remove --purge -y python3-certbot*
+# 	@apt-get remove --purge -y certbot*
+# 	@rm -rf /etc/letsencrypt
 
 
 # Полезные команды
